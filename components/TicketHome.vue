@@ -1,4 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const data = useDataStore();
+
+const getEvents = async () => {
+  await data.getEvent();
+};
+
+onMounted(() => {
+  getEvents();
+})
+</script>
 
 <template>
   <div class="w-screen h-screen flex items-end justify-center bg-hero-bg bg-center bg-cover bg-no-repeat bg-black mix-blend-overlay relative">

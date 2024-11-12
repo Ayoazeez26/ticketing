@@ -14,7 +14,7 @@ export default <Partial<Config>>{
       },
       backgroundImage: {
         "hero-bg": "url(/img/home-img.webp)",
-        "bero-bg-mob": "url(/img/home-mob-img.webp)",
+        "hero-bg-mob": "url(/img/home-mob-img.webp)",
       },
     },
   },

@@ -76,7 +76,7 @@ onMounted(() => {
 
 <template>
   <div class="bg-white w-full min-h-screen">
-    <div class="bg-lime w-full py-5">
+    <div class="bg-lime w-full py-5 px-3 md:px-4">
       <div class="flex items-center gap-3 text-green max-w-[1280px] mx-auto">
         <Icon name="mdi:information-variant-circle-outline" size="24" />
         <p class="text-lg">
@@ -85,9 +85,9 @@ onMounted(() => {
         </p>
       </div>
     </div>
-    <div class="flex items-center justify-between w-full mx-auto">
-      <div class="flex flex-col w-1/2 mt-10">
-        <form class="w-full flex flex-col max-w-[506px] mx-auto">
+    <div class="flex flex-col-reverse md:flex-row items-center justify-between w-full mx-auto lg:px-6 xl:px-0">
+      <div class="flex flex-col w-full px-4 md:px-0 md:w-1/2 mt-10">
+        <form class="w-full flex flex-col md:max-w-[506px] mx-auto">
           <div class="flex flex-col w-full gap-5">
             <div class="w-full">
               <label
@@ -181,13 +181,14 @@ onMounted(() => {
           <button
             type="button"
             @click="register"
-            class="text-white bg-green-2 rounded-lg px-14 py-4 text-2xl font-bold max-w-fit self-end mt-8">
+            class="text-white bg-green-2 rounded-lg px-16 md:px-14 py-4 md:text-2xl font-bold max-w-fit md:self-end mt-8">
             Continue
           </button>
         </form>
       </div>
-      <div class="w-1/2">
-        <img src="/img/info-bg.webp" alt="info background" />
+      <div class="w-full md:w-1/2">
+        <img src="/img/info-bg.webp" alt="info background" class="hidden md:block w-full h-[calc(100vh-68px)] object-cover" />
+        <img src="/img/info-bg-mob.webp" alt="info background" class="md:hidden" />
       </div>
     </div>
   </div>

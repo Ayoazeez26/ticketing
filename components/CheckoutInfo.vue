@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
+import { errorToast } from "~/plugins/vue3-toastify";
 import type { PaymentInfo, RegisterInput } from "~/types";
 
 const config = useRuntimeConfig();
+const { executeRecaptcha } = useGoogleRecaptcha();
 const dataStore = useDataStore();
 const router = useRouter();
 const baseFee = ref(5000);
@@ -20,26 +22,79 @@ const totalAmount = computed(() => {
   return fees.value + amount.value;
 });
 
+interface FormErrors {
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
+  email?: string;
+  confirmEmail?: string;
+}
+
 const registerInfo: RegisterInput = reactive({
   firstname: "",
   lastname: "",
   phone: "",
   email: "hello@wearegada.com",
   ticket_id: "",
-  quantity: dataStore.count
-})
+  quantity: dataStore.count,
+  token: "",
+});
 
-const register = async() => {
+const errors = reactive<FormErrors>({});
+
+const validateField = (field: keyof RegisterInput) => {
+  switch (field) {
+    case "firstname":
+      errors.firstname = registerInfo.firstname
+        ? ""
+        : "First name is required.";
+      break;
+    case "lastname":
+      errors.lastname = registerInfo.lastname ? "" : "Last name is required.";
+      break;
+    case "phone":
+      errors.phone = registerInfo.phone.match(/^\d{11}$/)
+        ? ""
+        : "Phone number must be exactly 11 digits.";
+      break;
+    case "email":
+      errors.email = registerInfo.email.match(
+        /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+      )
+        ? ""
+        : "Invalid email format.";
+      break;
+  }
+};
+
+const validateConfirmEmail = () => {
+  errors.confirmEmail =
+    confirmEmail.value === registerInfo.email ? "" : "Emails do not match.";
+};
+
+const register = async () => {
+  for (const field in registerInfo) {
+    validateField(field as keyof RegisterInput);
+  }
+  validateConfirmEmail();
+  if (Object.values(errors).some((error) => error)) {
+    errorToast("Please fix the errors in the form");
+  }
+
+  const { token } = await executeRecaptcha("submit");
+
+  registerInfo.token = token;
   const userRegistered = await dataStore.register(registerInfo);
   if (userRegistered) {
+    console.log(userRegistered);
     Object.assign(paymentDetails, userRegistered);
     initializePayment();
   }
-}
+};
 
 const initializePayment = () => {
   console.log(paymentDetails);
-  console.log(config.public.pk_key)
+  console.log(config.public.pk_key);
   const handler = PaystackPop.setup({
     key: config.public.pk_key, //Replace with your public key
     email: registerInfo.email, //replace with user email
@@ -85,14 +140,13 @@ onMounted(() => {
         </p>
       </div>
     </div>
-    <div class="flex flex-col-reverse md:flex-row items-center justify-between w-full mx-auto lg:px-6 xl:px-0">
+    <div
+      class="flex flex-col-reverse md:flex-row items-center justify-between w-full mx-auto lg:px-6 xl:px-0">
       <div class="flex flex-col w-full px-4 md:px-0 md:w-1/2 mt-10">
         <form class="w-full flex flex-col md:max-w-[506px] mx-auto">
-          <div class="flex flex-col w-full gap-5">
+          <div class="flex flex-col w-full gap-1">
             <div class="w-full">
-              <label
-                for="first-name"
-                class="block text-sm/6 text-gray-900"
+              <label for="first-name" class="block text-sm/6 text-gray-900"
                 >First name</label
               >
               <div class="mt-2">
@@ -101,16 +155,22 @@ onMounted(() => {
                   name="first-name"
                   id="first-name"
                   v-model="registerInfo.firstname"
-                  autocomplete="given-name"
+                  @blur="validateField('firstname')"
+                  :class="{ 'ring-red-500': errors.firstname }"
                   required
                   class="block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 px-3 focus:ring-green-2 sm:text-sm/6" />
+                <p v-if="errors.firstname" class="text-red-500 text-sm mt-1">
+                  {{ errors.firstname }}
+                </p>
+                <p v-else class="text-white text-sm mt-1">
+                  no errors here mate
+                </p>
               </div>
             </div>
 
+            <!-- Last Name -->
             <div class="w-full">
-              <label
-                for="last-name"
-                class="block text-sm/6 text-gray-900"
+              <label for="last-name" class="block text-sm/6 text-gray-900"
                 >Last name</label
               >
               <div class="mt-2">
@@ -119,14 +179,21 @@ onMounted(() => {
                   name="last-name"
                   id="last-name"
                   v-model="registerInfo.lastname"
-                  autocomplete="family-name"
+                  @blur="validateField('lastname')"
+                  :class="{ 'ring-red-500': errors.lastname }"
                   class="block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 px-3 focus:ring-green-2 sm:text-sm/6" />
+                <p v-if="errors.lastname" class="text-red-500 text-sm mt-1">
+                  {{ errors.lastname }}
+                </p>
+                <p v-else class="text-white text-sm mt-1">
+                  no errors here mate
+                </p>
               </div>
             </div>
+
+            <!-- Phone Number -->
             <div class="w-full">
-              <label
-                for="phone"
-                class="block text-sm/6 text-gray-900"
+              <label for="phone" class="block text-sm/6 text-gray-900"
                 >Phone Number</label
               >
               <div class="mt-2">
@@ -135,16 +202,22 @@ onMounted(() => {
                   name="phone"
                   id="phone"
                   v-model="registerInfo.phone"
-                  autocomplete="phone-number"
-                  placeholder="+234"
+                  @blur="validateField('phone')"
+                  :class="{ 'ring-red-500': errors.phone }"
+                  placeholder="Phone number here"
                   class="block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 px-3 focus:ring-green-2 sm:text-sm/6" />
+                <p v-if="errors.phone" class="text-red-500 text-sm mt-1">
+                  {{ errors.phone }}
+                </p>
+                <p v-else class="text-white text-sm mt-1">
+                  no errors here mate
+                </p>
               </div>
             </div>
 
+            <!-- Email -->
             <div class="w-full">
-              <label
-                for="email"
-                class="block text-sm/6 text-gray-900"
+              <label for="email" class="block text-sm/6 text-gray-900"
                 >Email address</label
               >
               <div class="mt-2">
@@ -152,29 +225,45 @@ onMounted(() => {
                   id="email"
                   name="email"
                   type="email"
-                  required
                   v-model="registerInfo.email"
-                  autocomplete="email"
+                  @blur="validateField('email')"
+                  :class="{ 'ring-red-500': errors.email }"
+                  required
                   class="block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 px-3 focus:ring-green-2 sm:text-sm/6" />
-                  <p class="text-xs mt-1 text-[#757575]">Tickets will only be sent to the email address you provide here</p>
+                <p v-if="errors.email" class="text-red-500 text-sm mt-1">
+                  {{ errors.email }}
+                </p>
+                <p v-else class="text-white text-sm mt-1">
+                  no errors here mate
+                </p>
+                <p class="text-xs mt-1 text-[#757575]">
+                  Tickets will only be sent to the email address you provide
+                  here
+                </p>
               </div>
             </div>
 
+            <!-- Confirm Email -->
             <div class="w-full">
-              <label
-                for="email"
-                class="block text-sm/6 text-gray-900"
+              <label for="confirm-email" class="block text-sm/6 text-gray-900"
                 >Confirm email address</label
               >
               <div class="mt-2">
                 <input
-                  id="email"
-                  name="email"
+                  id="confirm-email"
+                  name="confirm-email"
                   type="email"
-                  required
                   v-model="confirmEmail"
-                  autocomplete="email"
+                  @blur="validateConfirmEmail"
+                  :class="{ 'ring-red-500': errors.confirmEmail }"
+                  required
                   class="block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 px-3 focus:ring-green-2 sm:text-sm/6" />
+                <p v-if="errors.confirmEmail" class="text-red-500 text-sm mt-1">
+                  {{ errors.confirmEmail }}
+                </p>
+                <p v-else class="text-white text-sm mt-1">
+                  no errors here mate
+                </p>
               </div>
             </div>
           </div>
@@ -187,8 +276,14 @@ onMounted(() => {
         </form>
       </div>
       <div class="w-full md:w-1/2">
-        <img src="/img/info-bg.webp" alt="info background" class="hidden md:block w-full h-[calc(100vh-68px)] object-cover" />
-        <img src="/img/info-bg-mob.webp" alt="info background" class="md:hidden" />
+        <img
+          src="/img/info-bg.webp"
+          alt="info background"
+          class="hidden md:block w-full h-[calc(100vh-68px)] object-cover" />
+        <img
+          src="/img/info-bg-mob.webp"
+          alt="info background"
+          class="md:hidden" />
       </div>
     </div>
   </div>

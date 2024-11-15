@@ -22,6 +22,7 @@ export default defineNuxtConfig({
       baseUrl: process.env.NUXT_BASE_URL,
       eventID: process.env.EVENT_ID,
       pk_key: process.env.PAYSTACK_API_KEY,
+      recaptcha_key: process.env.RECAPTCHA_SITE_KEY,
     },
   },
 });

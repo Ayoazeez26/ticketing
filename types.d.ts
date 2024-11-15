@@ -5,6 +5,7 @@ export interface RegisterInput {
   phone: string;
   ticket_id: string;
   quantity: number;
+  token: string | undefined;
 }
 
 export interface EventResponse {

@@ -15,17 +15,6 @@ export const useDataStore = defineStore(
 
     const router = useRouter();
 
-    // const miniMockRequest = (payload: MiniMockRequestInput) => {
-    //   dialog.isLoading = true;
-    //   return new Promise((resolve, reject) => {
-    //     $api.data.miniMockRequest(payload).then((res: any) => {
-    //       console.log(res);
-    //       dialog.isLoading = false;
-    //       resolve(res);
-    //     });
-    //   });
-    // };
-
     const register = (payload: RegisterInput) => {
       dialog.isLoading = true;
       return new Promise((resolve, reject) => {
@@ -43,21 +32,6 @@ export const useDataStore = defineStore(
         Object.assign(events, res.data);
       });
     };
-
-    // const login = (payload: UserLoginInput) => {
-    //   dialog.isLoading = true;
-    //   return new Promise((resolve, reject) => {
-    //     $api.data.login(payload).then((res: any) => {
-    //       dialog.isLoading = false;
-    //       console.log(res);
-    //       token.value = res.accessToken;
-    //       user.value = res;
-    //       authenticated.value = true;
-    //       // localStorage.setItem('user-token', res.accessToken);
-    //       router.push("/consultancy/dashboard");
-    //     });
-    //   });
-    // };
 
     return {
       count,

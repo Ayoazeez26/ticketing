@@ -34,7 +34,7 @@ const registerInfo: RegisterInput = reactive({
   firstname: "",
   lastname: "",
   phone: "",
-  email: "hello@wearegada.com",
+  email: "",
   ticket_id: "",
   quantity: dataStore.count,
   token: "",

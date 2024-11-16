@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const dataStore = useDataStore();
 const baseFee = ref(5000);
-const fees = ref(500);
+// const fees = ref(500);
 // const count = ref(1);
 const amount = computed(() => {
   return baseFee.value * dataStore.count;
@@ -9,6 +9,17 @@ const amount = computed(() => {
 const totalAmount = computed(() => {
   return fees.value + amount.value;
 });
+
+const fees = computed(() => {
+  return amount.value * 0.075;
+})
+
+onMounted(() => {
+  const ticketData = dataStore.events.tickets[0];
+  console.log(dataStore.events.tickets[0]);
+  fees.value = ticketData.fee / 100;
+  baseFee.value = ticketData.amount / 100 ;
+})
 </script>
 
 <template>
@@ -65,7 +76,7 @@ const totalAmount = computed(() => {
                 name="amount"
                 v-model="dataStore.count"
                 class="w-full cursor-pointer appearance-none rounded-[8px] p-2 px-3 focus:outline-none border-[1.24px] border-green">
-                <option v-for="item in 10" :key="item" :value="item">
+                <option v-for="item in 3" :key="item" :value="item">
                   {{ item }}
                 </option>
               </select>
@@ -90,7 +101,7 @@ const totalAmount = computed(() => {
             </div>
             <div class="flex justify-between items-center mb-8">
               <p>Fees</p>
-              <p class="text-grey-3">N 500</p>
+              <p class="text-grey-3">N {{fees}}</p>
             </div>
             <div
               class="flex justify-between items-center pb-6 border-b border-dashed">

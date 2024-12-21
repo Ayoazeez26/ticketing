@@ -30,36 +30,36 @@ const checkIn = async () => {
   <div v-if="Object.keys(ticketDetails).length !== 0" class="p-6">
     <h1 class="text-green-2 font-bold text-2xl">Customer Details</h1>
     <div class="mt-6 text-grey-3">
-      <p class="mb-2">
+      <p class="mb-2 text-xl">
         First Name:
         <span class="font-medium text-black">{{ ticketDetails.firstname }}</span>
       </p>
-      <p class="mb-2">
+      <p class="mb-2 text-xl">
         Last Name:
         <span class="font-medium text-black">{{ ticketDetails.lastname }}</span>
       </p>
-      <p class="mb-2">
+      <p class="mb-2 text-xl">
         Phone Number:
         <span class="font-medium text-black">{{ ticketDetails.phone }}</span>
       </p>
-      <p class="mb-2">
+      <p class="mb-2 text-xl">
         Email Address:
         <span class="font-medium text-black">{{ ticketDetails.email }}</span>
       </p>
-      <p class="mb-2">
+      <p class="mb-2 text-xl">
         Ticket Quantity:
         <span class="font-medium text-black">{{
           ticketDetails.ticketQuantity
         }}</span>
       </p>
-      <p class="mb-2">
+      <p class="mb-2 text-xl">
         Checked In Tickets:
         <span class="font-medium text-black">{{
           ticketDetails.checkedinTicket
         }}</span>
       </p>
       <div class="flex items-end">
-      <p class="mb-1">No. of tickets to be checked in:</p>
+      <p class="mb-1 text-xl">No. of tickets to be checked in:</p>
       <div class="relative max-w-24 lg:max-w-16 flex-1 text-green ml-2">
         <Icon
           name="material-symbols:keyboard-arrow-down"

@@ -218,6 +218,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         //   dataStore.logout();
         // }, 1000);
       } else {
+        errorToast(error.response._data.message)
         errorToast(
           error.response && error.response._data
             ? error.response._data.message

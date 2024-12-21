@@ -36,3 +36,13 @@ export interface PaymentInfo {
   ref: string;
   amount: number;
 }
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface CheckInInput {
+  ticket_checkin_number: number;
+  customer_ticket_id: string;
+}

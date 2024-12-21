@@ -1,7 +1,9 @@
 import FetchFactory from "../factory";
 
 import type {
-  RegisterInput
+  RegisterInput,
+  LoginInput,
+  CheckInInput
 } from "~/types";
 
 class DataModule extends FetchFactory {
@@ -14,11 +16,25 @@ class DataModule extends FetchFactory {
       registerDetails
     );
   }
-  async getEvent(eventId: string): Promise {
+  async login(loginDetails: LoginInput): Promise {
     return await this.call(
-      "GET",
-      `${this.RESOURCE}/api/event/${eventId}`
+      "POST",
+      `${this.RESOURCE}/api/auth/signin`,
+      loginDetails
     );
+  }
+  async checkIn(customerDetails: CheckInInput): Promise {
+    return await this.call(
+      "POST",
+      `${this.RESOURCE}/api/event/check-in`,
+      customerDetails
+    );
+  }
+  async getEvent(eventId: string): Promise {
+    return await this.call("GET", `${this.RESOURCE}/api/event/${eventId}`);
+  }
+  async getCustomerTicketDetails(ticketId: string): Promise {
+    return await this.call("GET", `${this.RESOURCE}/api/event/customer_ticket_details/${ticketId}`);
   }
 }
 

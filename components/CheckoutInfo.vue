@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid";
 import { errorToast } from "~/plugins/vue3-toastify";
 import type { PaymentInfo, RegisterInput } from "~/types";
 

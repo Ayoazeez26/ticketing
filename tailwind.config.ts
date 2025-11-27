@@ -3,6 +3,10 @@ import type { Config } from "tailwindcss";
 export default <Partial<Config>>{
   theme: {
     extend: {
+      fontFamily: {
+        'biorhyme': ['BioRhyme', 'serif'],
+        'roboto': ['Roboto', 'sans-serif'],
+      },
       colors: {
         grey: "#2B2B2B",
         brown: "#A35E05",
@@ -13,8 +17,8 @@ export default <Partial<Config>>{
         "grey-3": "#757575",
       },
       backgroundImage: {
-        "hero-bg": "url(/img/home-img.webp)",
-        "hero-bg-mob": "url(/img/home-mob-img.webp)",
+        "hero-bg": "url(/img/landing-hero.webp)",
+        "hero-bg-mob": "url(/img/landing-hero-mob.webp)",
       },
     },
   },

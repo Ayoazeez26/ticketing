@@ -12,6 +12,8 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       "Open+Sans": "400..800",
+      "BioRhyme": [200, 300, 400, 700, 800],
+      "Roboto": [100, 300, 400, 500, 700, 900],
     },
   },
 

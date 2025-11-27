@@ -346,7 +346,7 @@ onMounted(() => {
           </div>
 
           <!-- Buttons -->
-          <div class="flex flex-col sm:flex-row gap-4 mt-8">
+          <div class="flex flex-col sm:flex-row gap-4 sm:justify-end mt-8">
             <button
               type="button"
               @click="$router.back()"
@@ -398,41 +398,45 @@ onMounted(() => {
             </div>
           </div>
           <div class="mt-4 md:mt-6">
-            <div class="flex justify-between items-center mb-4 md:mb-8">
+            <h4
+            class="text-grey-3 text-xl font-medium pb-4 md:pb-6 md:block hidden">
+            Order Summary
+          </h4>
+            <div class="flex justify-between items-center mb-4 border-b border-dashed pb-4">
+              <p class="text-grey-3 text-sm md:text-base">
+                Ticket Type
+              </p>
               <p class="text-sm md:text-base">
                 {{ dataStore.count }} x Earlybird
               </p>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+              <p class="text-sm md:text-base">
+                Ticket Price
+              </p>
               <p class="text-grey-3 text-sm md:text-base">
-                N{{ amount.toLocaleString() }}
+                {{ dataStore.count }} x N{{ amount.toLocaleString() }}
               </p>
             </div>
-            <div class="flex justify-between items-center mb-4 md:mb-8">
-              <p class="text-sm md:text-base">Fees</p>
+            <div class="flex justify-between items-center mb-2">
+              <p class="text-sm md:text-base">Service & Handling</p>
+              <p class="text-grey-3 text-sm md:text-base">
+                -
+              </p>
+            </div>
+            <div class="flex justify-between items-center pb-4 md:pb-6 border-b border-dashed">
+              <p class="text-sm md:text-base">Admin Fee</p>
               <p class="text-grey-3 text-sm md:text-base">
                 N{{ fees.toLocaleString() }}
-              </p>
-            </div>
-            <div
-              class="flex justify-between items-center pb-4 md:pb-6 border-b border-dashed">
-              <p class="text-sm md:text-base">Subtotal</p>
-              <p class="text-grey-3 text-sm md:text-base">
-                N{{ totalAmount.toLocaleString() }}
               </p>
             </div>
           </div>
 
           <div class="mt-4 md:mt-6 flex justify-between items-center">
-            <p class="text-base md:text-lg font-semibold">Total</p>
-            <p class="text-grey-3 text-base md:text-lg font-semibold">
+            <p class="text-base md:text-lg">Total</p>
+            <p class="text-black text-base md:text-lg font-medium">
               N{{ totalAmount.toLocaleString() }}
             </p>
-          </div>
-          <div class="w-full">
-            <nuxt-link
-              to="/info"
-              class="text-white bg-[#1f9949] rounded px-8 md:px-14 py-3 md:py-4 text-sm md:text-lg text-center w-full md:max-w-full mt-4 md:mt-6 block hover:bg-[#1f9949]/90 transition-colors"
-              >Proceed to Pay</nuxt-link
-            >
           </div>
         </div>
       </div>

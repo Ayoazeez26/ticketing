@@ -8,14 +8,13 @@ const dataStore = useDataStore();
 const router = useRouter();
 const baseFee = ref(5000);
 const fees = ref(500);
-const count = ref(1);
 const firstName = ref("");
 const lastName = ref("");
 const confirmEmail = ref("");
 const phoneNumber = ref("");
 const paymentDetails = reactive<PaymentInfo | {}>({});
 const amount = computed(() => {
-  return baseFee.value * count.value;
+  return baseFee.value * dataStore.count;
 });
 const totalAmount = computed(() => {
   return fees.value + amount.value;

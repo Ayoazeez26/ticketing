@@ -420,7 +420,7 @@ onMounted(() => {
               class="flex justify-between items-center mb-4 border-b border-dashed pb-4">
               <p class="text-grey-3 text-sm md:text-base">Ticket Type</p>
               <p class="text-sm md:text-base">
-                {{ dataStore.count }} x Earlybird
+                {{ dataStore.count }} x Online ticket(s)
               </p>
             </div>
             <div class="flex justify-between items-center mb-2">

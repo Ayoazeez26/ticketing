@@ -46,9 +46,9 @@ onMounted(() => {
     <div
       class="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16 mt-auto mb-6 md:mb-8 lg:mb-12 w-full px-4 md:px-0">
       <img
-        src="/img/ani-tick.webp"
+        src="/img/ani-tickk.webp"
         alt="ani-con"
-        class="hidden md:block w-full max-w-[350px] order-2 md:order-1" />
+        class="hidden md:block w-full max-w-[606px] order-2 md:order-1" />
         <img
         src="/img/ani-tick-mob.webp"
         alt="ani-con"

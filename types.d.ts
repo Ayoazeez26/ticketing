@@ -46,3 +46,37 @@ export interface CheckInInput {
   ticket_checkin_number: number;
   customer_ticket_id: string;
 }
+
+// Paystack Pop global type declaration
+declare global {
+  interface Window {
+    PaystackPop: {
+      setup: (options: {
+        key: string;
+        email: string;
+        amount: number;
+        currency: string;
+        ref: string;
+        callback: (response: { reference: string }) => void;
+        onClose: () => void;
+      }) => {
+        openIframe: () => void;
+      };
+    };
+  }
+}
+
+// For direct access (when script is loaded)
+declare const PaystackPop: {
+  setup: (options: {
+    key: string;
+    email: string;
+    amount: number;
+    currency: string;
+    ref: string;
+    callback: (response: { reference: string }) => void;
+    onClose: () => void;
+  }) => {
+    openIframe: () => void;
+  };
+};

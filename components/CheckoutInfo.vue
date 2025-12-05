@@ -136,15 +136,24 @@ const register = async () => {
 
 const initializePayment = () => {
   console.log(paymentDetails);
-  console.log(config.public.pk_key);
+  // console.log(config.public.pk_key);
+
+  // Type assertion for PaystackPop (loaded dynamically from script)
+  const PaystackPop = (window as any).PaystackPop as typeof window.PaystackPop;
+
+  if (!PaystackPop) {
+    errorToast("Payment service is not available. Please refresh the page.");
+    return;
+  }
+
   const handler = PaystackPop.setup({
     key: config.public.pk_key, //Replace with your public key
     email: registerInfo.email, //replace with user email
-    amount: paymentDetails.amount, // the amount value is multiplied by 100 to convert to the lowest currency unit
+    amount: (paymentDetails as PaymentInfo).amount, // the amount value is multiplied by 100 to convert to the lowest currency unit
 
     currency: "NGN", // Use GHS for Ghana Cedis or USD for US Dollars
 
-    ref: paymentDetails.ref, // Replace with a reference you generated
+    ref: (paymentDetails as PaymentInfo).ref, // Replace with a reference you generated
     callback: function (response: any) {
       //this happens after the payment is completed successfully
       var reference = response.reference;
@@ -164,7 +173,10 @@ const initializePayment = () => {
 };
 
 onMounted(() => {
-  const ticketData = dataStore.events?.tickets?.[0];
+  const events = dataStore.events as {
+    tickets?: Array<{ id: string; fee: number; amount: number }>;
+  } | null;
+  const ticketData = events?.tickets?.[0];
   if (ticketData) {
     fees.value = ticketData.fee / 100;
     baseFee.value = ticketData.amount / 100;
@@ -398,32 +410,28 @@ onMounted(() => {
           </div>
           <div class="mt-4 md:mt-6">
             <h4
-            class="text-grey-3 text-xl font-medium pb-4 md:pb-6 md:block hidden">
-            Order Summary
-          </h4>
-            <div class="flex justify-between items-center mb-4 border-b border-dashed pb-4">
-              <p class="text-grey-3 text-sm md:text-base">
-                Ticket Type
-              </p>
+              class="text-grey-3 text-xl font-medium pb-4 md:pb-6 md:block hidden">
+              Order Summary
+            </h4>
+            <div
+              class="flex justify-between items-center mb-4 border-b border-dashed pb-4">
+              <p class="text-grey-3 text-sm md:text-base">Ticket Type</p>
               <p class="text-sm md:text-base">
                 {{ dataStore.count }} x Earlybird
               </p>
             </div>
             <div class="flex justify-between items-center mb-2">
-              <p class="text-sm md:text-base">
-                Ticket Price
-              </p>
+              <p class="text-sm md:text-base">Ticket Price</p>
               <p class="text-grey-3 text-sm md:text-base">
                 {{ dataStore.count }} x N{{ amount.toLocaleString() }}
               </p>
             </div>
             <div class="flex justify-between items-center mb-2">
               <p class="text-sm md:text-base">Service & Handling</p>
-              <p class="text-grey-3 text-sm md:text-base">
-                -
-              </p>
+              <p class="text-grey-3 text-sm md:text-base">-</p>
             </div>
-            <div class="flex justify-between items-center pb-4 md:pb-6 border-b border-dashed">
+            <div
+              class="flex justify-between items-center pb-4 md:pb-6 border-b border-dashed">
               <p class="text-sm md:text-base">Admin Fee</p>
               <p class="text-grey-3 text-sm md:text-base">
                 N{{ fees.toLocaleString() }}

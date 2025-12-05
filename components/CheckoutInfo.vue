@@ -7,7 +7,6 @@ const { executeRecaptcha } = useGoogleRecaptcha();
 const dataStore = useDataStore();
 const router = useRouter();
 const baseFee = ref(5000);
-const fees = ref(500);
 const firstName = ref("");
 const lastName = ref("");
 const confirmEmail = ref("");
@@ -15,6 +14,11 @@ const phoneNumber = ref("");
 const paymentDetails = reactive<PaymentInfo | {}>({});
 const amount = computed(() => {
   return baseFee.value * dataStore.count;
+});
+// Fees is 7.5% of totalAmount
+// Since totalAmount = fees + amount, we calculate fees as: amount * 0.075 / 0.925
+const fees = computed(() => {
+  return Math.round(((amount.value * 0.075) / 0.925) * 100) / 100;
 });
 const totalAmount = computed(() => {
   return fees.value + amount.value;
@@ -178,7 +182,6 @@ onMounted(() => {
   } | null;
   const ticketData = events?.tickets?.[0];
   if (ticketData) {
-    fees.value = ticketData.fee / 100;
     baseFee.value = ticketData.amount / 100;
     registerInfo.ticket_id = ticketData.id;
   }
